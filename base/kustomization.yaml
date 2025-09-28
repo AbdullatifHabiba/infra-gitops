@@ -7,9 +7,10 @@ resources:
 - storage/persistentvolumeclaim.yaml
 - secrets/secrets.yaml
 
-commonLabels:
-  app: dependency-track
-  managed-by: kustomize
+labels:
+- pairs:
+    app: dependency-track
+    managed-by: kustomize
 
 images:
 - name: public.ecr.aws/a1x0e8q5/abdu/dt-frontend

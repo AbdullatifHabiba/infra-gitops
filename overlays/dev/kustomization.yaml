@@ -1,12 +1,13 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
-namespace: dev
+namespace: dependency-track-dev
 resources:
 - ../../base
 
 namePrefix: dev-
-commonLabels:
-  environment: dev
+labels:
+- pairs:
+    environment: dev
 
 images:
 - name: public.ecr.aws/a1x0e8q5/abdu/dt-frontend
@@ -14,8 +15,8 @@ images:
 - name: public.ecr.aws/a1x0e8q5/abdu/dt-backend
   newTag: latest
 
-patchesStrategicMerge:
-- patch.yaml
+patches:
+- path: patch.yaml
 
 secretGenerator:
 - name: database-secret
