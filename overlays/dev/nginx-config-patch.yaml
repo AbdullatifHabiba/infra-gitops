@@ -2,9 +2,6 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: nginx-config
-  labels:
-    app: dependency-track
-    component: frontend
 data:
   nginx.conf: |
     server {
@@ -20,7 +17,7 @@ data:
         
         # Proxy API requests to backend SERVICE
         location /api/ {
-            proxy_pass http://dependency-track-backend:8080;
+            proxy_pass http://dev-dependency-track-backend:8080;
             
             # Preserve client information
             proxy_set_header Host $host;
@@ -56,7 +53,7 @@ data:
         
         # Backend health check (for nginx readiness)
         location /backend-health {
-            proxy_pass http://dependency-track-backend:8080/api/version;
+            proxy_pass http://dev-dependency-track-backend:8080/api/version;
             access_log off;
             proxy_connect_timeout 5s;
             proxy_read_timeout 5s;

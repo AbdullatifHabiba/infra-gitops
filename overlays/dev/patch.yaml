@@ -18,6 +18,8 @@ spec:
         env:
         - name: JAVA_OPTIONS
           value: "-Xmx1g -Xms512m -XX:+UseG1GC"
+        - name: ALPINE_DATABASE_URL
+          value: "jdbc:postgresql://dev-dependency-track-database:5432/dependencytrack"
         resources:
           requests:
             memory: "1Gi"
@@ -43,3 +45,16 @@ spec:
   resources:
     requests:
       storage: 5Gi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dependency-track-frontend
+spec:
+  template:
+    spec:
+      containers:
+      - name: frontend
+        env:
+        - name: API_BASE_URL
+          value: "http://dev-dependency-track-backend:8080"

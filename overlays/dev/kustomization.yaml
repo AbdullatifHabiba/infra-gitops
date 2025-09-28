@@ -17,6 +17,7 @@ images:
 
 patches:
 - path: patch.yaml
+- path: nginx-config-patch.yaml
 
 secretGenerator:
 - name: database-secret
