@@ -10,11 +10,11 @@ spec:
   project: dependency-track
   source:
     repoURL: https://github.com/AbdullatifHabiba/infra-gitops.git
-    targetRevision: main
+    targetRevision: HEAD
     path: overlays/dev
   destination:
     server: https://kubernetes.default.svc
-    namespace: dev
+    namespace: dependency-track-dev
   syncPolicy:
     automated:
       selfHeal: true
