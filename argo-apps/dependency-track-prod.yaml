@@ -9,7 +9,7 @@ metadata:
 spec:
   project: dependency-track
   source:
-    repoURL: https://github.com/your-org/infra-gitops.git
+    repoURL: https://github.com/AbdullatifHabiba/infra-gitops.git
     targetRevision: HEAD
     path: overlays/prod
   destination:
