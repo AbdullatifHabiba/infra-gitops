@@ -5,14 +5,14 @@ echo "=== Deploying Dependency-Track (Multi-Pod Architecture) ==="
 
 # Create namespaces
 kubectl create namespace dev --dry-run=client -o yaml | kubectl apply -f -
-kubectl create namespace prod --dry-run=client -o yaml | kubectl apply -f -
+# kubectl create namespace prod --dry-run=client -o yaml | kubectl apply -f -
 
 # Apply ArgoCD project
 kubectl apply -f argo-apps/project.yaml
 
 # Deploy applications
 kubectl apply -f argo-apps/dependency-track-dev.yaml
-kubectl apply -f argo-apps/dependency-track-prod.yaml
+# kubectl apply -f argo-apps/dependency-track-prod.yaml
 
 echo "=== Deployment Complete ==="
 echo "ArgoCD Applications:"
