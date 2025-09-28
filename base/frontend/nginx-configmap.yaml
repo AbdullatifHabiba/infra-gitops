@@ -1,0 +1,64 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nginx-config
+  labels:
+    app: dependency-track
+    component: frontend
+data:
+  nginx.conf: |
+    server {
+        listen 80;
+        server_name localhost;
+        
+        # Serve static files (Vue.js SPA)
+        location / {
+            root /usr/share/nginx/html;
+            index index.html;
+            try_files $uri $uri/ /index.html;
+        }
+        
+        # Proxy API requests to backend SERVICE
+        location /api/ {
+            proxy_pass http://dev-dependency-track-backend:8080;
+            
+            # Preserve client information
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
+            
+            # Additional headers for better backend integration
+            proxy_set_header X-Forwarded-Host $host;
+            proxy_set_header X-Forwarded-Server $host;
+            
+            # Timeout settings (increased for backend processing)
+            proxy_connect_timeout 60s;
+            proxy_send_timeout 60s;
+            proxy_read_timeout 60s;
+            
+            # Buffer settings
+            proxy_buffering on;
+            proxy_buffer_size 4k;
+            proxy_buffers 8 4k;
+            
+            # Error handling
+            proxy_next_upstream error timeout invalid_header http_500 http_502 http_503 http_504;
+            proxy_next_upstream_tries 3;
+        }
+        
+        # Health check endpoint
+        location /health {
+            access_log off;
+            return 200 "healthy\n";
+            add_header Content-Type text/plain;
+        }
+        
+        # Backend health check (for nginx readiness)
+        location /backend-health {
+            proxy_pass http://dev-dependency-track-backend:8080/api/version;
+            access_log off;
+            proxy_connect_timeout 5s;
+            proxy_read_timeout 5s;
+        }
+    }
