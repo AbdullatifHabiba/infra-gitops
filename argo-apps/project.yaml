@@ -12,8 +12,6 @@ spec:
   destinations:
   - namespace: dependency-track-dev
     server: https://kubernetes.default.svc
-  - namespace: dependency-track-prod
-    server: https://kubernetes.default.svc
   clusterResourceWhitelist:
   - group: ''
     kind: Namespace
