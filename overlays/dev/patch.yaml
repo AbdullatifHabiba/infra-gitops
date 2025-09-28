@@ -17,34 +17,55 @@ spec:
       - name: backend
         env:
         - name: JAVA_OPTIONS
-          value: "-Xmx1g -Xms512m -XX:+UseG1GC"
+          value: "-Xmx512m -Xms256m -XX:+UseG1GC"
         - name: ALPINE_DATABASE_URL
           value: "jdbc:postgresql://dev-dependency-track-database:5432/dependencytrack"
         resources:
           requests:
+            memory: "512Mi"
+            cpu: "250m"
+          limits:
             memory: "1Gi"
             cpu: "500m"
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dependency-track-database
+spec:
+  template:
+    spec:
+      containers:
+      - name: postgres
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "100m"
           limits:
-            memory: "2Gi"
-            cpu: "1000m"
+            memory: "512Mi"
+            cpu: "250m"
+        volumeMounts:
+        - name: postgres-data
+          mountPath: /var/lib/postgresql/data
+      volumes:
+      - name: postgres-data
+        emptyDir: {}
 ---
-apiVersion: v1
-kind: PersistentVolumeClaim
+apiVersion: apps/v1
+kind: Deployment
 metadata:
-  name: postgres-data-pvc
+  name: dependency-track-backend
 spec:
-  resources:
-    requests:
-      storage: 10Gi
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: backend-data-pvc
-spec:
-  resources:
-    requests:
-      storage: 5Gi
+  template:
+    spec:
+      containers:
+      - name: backend
+        volumeMounts:
+        - name: data-volume
+          mountPath: /data
+      volumes:
+      - name: data-volume
+        emptyDir: {}
 ---
 apiVersion: apps/v1
 kind: Deployment
