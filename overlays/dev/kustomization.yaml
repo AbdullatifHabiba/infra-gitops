@@ -13,7 +13,7 @@ images:
 - name: public.ecr.aws/a1x0e8q5/abdu/dt-frontend
   newTag: 3aa9449e
 - name: public.ecr.aws/a1x0e8q5/abdu/dt-backend
-  newTag: latest
+  newTag: 8d3292d6
 
 patches:
 - path: patch.yaml
