@@ -1,0 +1,52 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: dependency-track
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  description: Dependency Track Application Project
+  sourceRepos:
+  - '*'
+  destinations:
+  - namespace: dependency-track-dev
+    server: https://kubernetes.default.svc
+  - namespace: dependency-track-prod
+    server: https://kubernetes.default.svc
+  clusterResourceWhitelist:
+  - group: ''
+    kind: Namespace
+  - group: 'rbac.authorization.k8s.io'
+    kind: ClusterRole
+  - group: 'rbac.authorization.k8s.io'
+    kind: ClusterRoleBinding
+  namespaceResourceWhitelist:
+  - group: ''
+    kind: ConfigMap
+  - group: ''
+    kind: Secret
+  - group: ''
+    kind: Service
+  - group: ''
+    kind: ServiceAccount
+  - group: ''
+    kind: PersistentVolumeClaim
+  - group: 'apps'
+    kind: Deployment
+  - group: 'apps'
+    kind: StatefulSet
+  - group: 'extensions'
+    kind: Ingress
+  - group: 'networking.k8s.io'
+    kind: Ingress
+  - group: 'networking.k8s.io'
+    kind: NetworkPolicy
+  roles:
+  - name: developer
+    description: Developer role for dependency-track project
+    policies:
+    - p, proj:dependency-track:developer, applications, get, dependency-track/*, allow
+    - p, proj:dependency-track:developer, applications, sync, dependency-track/*, allow
+    groups:
+    - dependency-track:developers
