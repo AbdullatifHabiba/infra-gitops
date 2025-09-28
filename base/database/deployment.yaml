@@ -37,22 +37,14 @@ spec:
               key: password
         - name: PGDATA
           value: "/var/lib/postgresql/data/pgdata"
-        volumeMounts:
-        - name: postgres-data
-          mountPath: /var/lib/postgresql/data
-        resources:
-          requests:
-            memory: "512Mi"
-            cpu: "250m"
-          limits:
-            memory: "1Gi"
-            cpu: "500m"
         livenessProbe:
           exec:
             command:
             - pg_isready
             - -U
-            - $(POSTGRES_USER)
+            - "$(POSTGRES_USER)"
+            - -d
+            - "$(POSTGRES_DB)"
           initialDelaySeconds: 30
           periodSeconds: 10
         readinessProbe:
@@ -60,10 +52,22 @@ spec:
             command:
             - pg_isready
             - -U
-            - $(POSTGRES_USER)
+            - "$(POSTGRES_USER)"
+            - -d
+            - "$(POSTGRES_DB)"
           initialDelaySeconds: 5
           periodSeconds: 5
+        volumeMounts:
+        - name: postgres-data
+          mountPath: /var/lib/postgresql/data
+        resources:
+          requests:
+            memory: "1Gi"
+            cpu: "500m"
+          limits:
+            memory: "2Gi"
+            cpu: "1000m"
       volumes:
       - name: postgres-data
         persistentVolumeClaim:
-          claimName: database-pvc
+          claimName: postgres-data-pvc

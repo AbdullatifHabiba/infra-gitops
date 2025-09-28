@@ -1,46 +1,46 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: frontend
+  name: dependency-track-frontend
   labels:
-    app: frontend
-    tier: frontend
+    app: dependency-track
+    component: frontend
 spec:
   replicas: 2
   selector:
     matchLabels:
-      app: frontend
-      tier: frontend
+      app: dependency-track
+      component: frontend
   template:
     metadata:
       labels:
-        app: frontend
-        tier: frontend
+        app: dependency-track
+        component: frontend
     spec:
       containers:
       - name: frontend
         image: public.ecr.aws/a1x0e8q5/abdu/dt-frontend:latest
         ports:
-        - containerPort: 8080
+        - containerPort: 80
         env:
         - name: API_BASE_URL
-          value: "http://backend-service:8080"
-        resources:
-          requests:
-            memory: "256Mi"
-            cpu: "250m"
-          limits:
-            memory: "512Mi"
-            cpu: "500m"
+          value: "http://dependency-track-backend:8080"
         livenessProbe:
           httpGet:
             path: /
-            port: 8080
-          initialDelaySeconds: 60
-          periodSeconds: 30
+            port: 80
+          initialDelaySeconds: 30
+          periodSeconds: 10
         readinessProbe:
           httpGet:
             path: /
-            port: 8080
-          initialDelaySeconds: 30
-          periodSeconds: 10
+            port: 80
+          initialDelaySeconds: 5
+          periodSeconds: 5
+        resources:
+          requests:
+            memory: "128Mi"
+            cpu: "100m"
+          limits:
+            memory: "256Mi"
+            cpu: "200m"

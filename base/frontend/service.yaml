@@ -1,17 +1,16 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: frontend-service
+  name: dependency-track-frontend
   labels:
-    app: frontend
-    tier: frontend
+    app: dependency-track
+    component: frontend
 spec:
-  type: ClusterIP
-  ports:
-  - port: 8080
-    targetPort: 8080
-    protocol: TCP
-    name: http
+  type: LoadBalancer
   selector:
-    app: frontend
-    tier: frontend
+    app: dependency-track
+    component: frontend
+  ports:
+  - port: 80
+    targetPort: 80
+    protocol: TCP

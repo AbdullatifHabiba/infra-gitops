@@ -1,30 +1,31 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
-
-metadata:
-  name: dependency-track-prod
-
+namespace: prod
 resources:
 - ../../base
 
-namespace: dependency-track-prod
-
 namePrefix: prod-
-
 commonLabels:
   environment: prod
-  
-patches:
-- path: patch.yaml
-  target:
-    group: apps
-    version: v1
-    kind: Deployment
 
-replicas:
-- name: dependency-track-frontend
-  count: 3
-- name: dependency-track-backend
-  count: 3
-- name: dependency-track-database
-  count: 1
+images:
+- name: public.ecr.aws/a1x0e8q5/abdu/dt-frontend
+  newTag: stable
+- name: public.ecr.aws/a1x0e8q5/abdu/dt-backend
+  newTag: stable
+
+patchesStrategicMerge:
+- patch.yaml
+
+secretGenerator:
+- name: database-secret
+  behavior: replace
+  literals:
+  - username=dtuser
+  - password=prod-secure-password-$(date +%s)
+
+configMapGenerator:
+- name: environment-config
+  literals:
+  - ENVIRONMENT=production
+  - LOG_LEVEL=INFO

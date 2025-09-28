@@ -1,12 +1,24 @@
-- op: replace
-  path: /spec/template/spec/containers/0/resources/requests/memory
-  value: "2Gi"
-- op: replace
-  path: /spec/template/spec/containers/0/resources/requests/cpu
-  value: "1000m"
-- op: replace
-  path: /spec/template/spec/containers/0/resources/limits/memory
-  value: "4Gi"
-- op: replace
-  path: /spec/template/spec/containers/0/resources/limits/cpu
-  value: "2000m"
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dependency-track-frontend
+spec:
+  replicas: 3
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dependency-track-backend
+spec:
+  replicas: 3
+  template:
+    spec:
+      containers:
+      - name: backend
+        resources:
+          requests:
+            memory: "3Gi"
+            cpu: "1500m"
+          limits:
+            memory: "6Gi"
+            cpu: "3000m"

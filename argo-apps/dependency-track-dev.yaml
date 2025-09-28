@@ -4,30 +4,21 @@ metadata:
   name: dependency-track-dev
   namespace: argocd
   labels:
-    app: dependency-track
     environment: dev
+    team: security
 spec:
   project: dependency-track
   source:
     repoURL: https://github.com/AbdullatifHabiba/infra-gitops.git
-    targetRevision: HEAD
+    targetRevision: main
     path: overlays/dev
   destination:
     server: https://kubernetes.default.svc
-    namespace: dependency-track-dev
+    namespace: dev
   syncPolicy:
     automated:
-      prune: true
       selfHeal: true
-      allowEmpty: false
+      prune: true
     syncOptions:
     - CreateNamespace=true
-    - PrunePropagationPolicy=foreground
-    - PruneLast=true
-    retry:
-      limit: 5
-      backoff:
-        duration: 5s
-        factor: 2
-        maxDuration: 3m
-  revisionHistoryLimit: 10
+    - ApplyOutOfSyncOnly=true
