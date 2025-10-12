@@ -4,15 +4,14 @@ set -e
 echo "=== Deploying Dependency-Track (Multi-Pod Architecture) ==="
 
 # Create namespaces
-kubectl create namespace dev --dry-run=client -o yaml | kubectl apply -f -
-# kubectl create namespace prod --dry-run=client -o yaml | kubectl apply -f -
+kubectl create namespace dependency-track-dev --dry-run=client -o yaml | kubectl apply -f -
+# kubectl create namespace dependency-track-prod --dry-run=client -o yaml | kubectl apply -f -
 
 # Apply ArgoCD project
 kubectl apply -f argo-apps/project.yaml
 
 # Deploy applications
 kubectl apply -f argo-apps/dependency-track-dev.yaml
-# kubectl apply -f argo-apps/dependency-track-prod.yaml
 
 echo "=== Deployment Complete ==="
 echo "ArgoCD Applications:"
@@ -27,5 +26,4 @@ echo "- Persistent Storage"
 
 echo "=== Access Information ==="
 echo "ArgoCD UI: https://localhost:8080"
-echo "Dev Resources: kubectl get all -n dev"
-echo "Prod Resources: kubectl get all -n prod"
+echo "Dev Resources: kubectl get all -n dependency-track-dev"
