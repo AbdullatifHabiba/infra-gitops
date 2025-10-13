@@ -17,8 +17,8 @@ spec:
     namespace: dependency-track-dev
   syncPolicy:
     automated:
-      selfHeal: true
-      prune: true
+      selfHeal: true # this will allow auto-remediation of out-of-sync resources
+      prune: true # this will allow deletion of resources that are no longer defined in Git
     syncOptions:
-    - CreateNamespace=true
-    - ApplyOutOfSyncOnly=true
+    - CreateNamespace=true # create namespace if not exists
+    - ApplyOutOfSyncOnly=true # only apply resources that are out of sync
